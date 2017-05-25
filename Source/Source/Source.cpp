@@ -28,13 +28,15 @@ void code() {
 		control[1] = (mas[1] + mas[2] + mas[5] + mas[6]) % 2;
 		control[2] = (mas[3] + mas[4] + mas[5] + mas[6]) % 2;
 		control[3] = mas[7];
+		control[4] = 0;
+		control[5] = 0;
+		control[6] = 0;
+		control[7] = 0;
 
-		for (int u = 0;u < 4;u++) printf("%d", control[u]);
-		printf("\n");
 		fprintf(fout, "%c", cc);
 		cc = 0;
-		int step = 16;
-		for (int y = 3;y >= 0;y--) {
+		int step = 1;
+		for (int y = 7;y >= 0;y--) {
 			cc += control[y] * step;
 			step *= 2;
 		}
@@ -50,7 +52,7 @@ void decode() {
 	FILE *fin = fopen("output.txt", "r");
 	FILE *fout = fopen("Hamming.txt", "w");
 	char c = 'n', cc;
-	int mas[8], mass[8], control[8], haming[4], j = 0, k = 0;
+	int mas[8], mass[8], hmas[8], control[8], haming[4], j = 0, k = 0;
 	while (!feof(fin)) {
 		c = fgetc(fin);
 		if (feof(fin)) break;
@@ -68,31 +70,35 @@ void decode() {
 		for (int i = 0;i < j;i++) {
 			mas[i + 8 - j] = mass[j - 1 - i];
 		}
-
-		for (int ii = 0;ii < 8;ii++) {
-			mas[ii] = 0;
-		}
-		int jj = 0;
-		while (cc > 0) {
-			mass[jj++] = cc % 2;
-			cc = cc / 2;
-			printf("%d", mass[j - 1]);
-		}
-		printf("\n");
-		for (int i = 0;i < 4;i++) {
-			control[3-i] = mass[--j];
-		}
+	
 
 		haming[0] = (mas[0] + mas[2] + mas[4] + mas[6]) % 2;
 		haming[1] = (mas[1] + mas[2] + mas[5] + mas[6]) % 2;
 		haming[2] = (mas[3] + mas[4] + mas[5] + mas[6]) % 2;
 		haming[3] = mas[7];
 
+		j = 0;
+		while (cc > 0) {
+			mass[j++] = cc % 2;
+			cc = cc / 2;
+		}
+		for (int ii = 0;ii < 8;ii++) {
+			hmas[ii] = 0;
+		}
+		for (int i = 0;i < j;i++) {
+			hmas[i + 8 - j] = mass[j - 1 - i];
+		}
+		for (int i = 0;i < 4;i++) {
+			control[i] = hmas[i];
+		}
+
+
 		int number = 0;
 		if (haming[0] != control[0]) number += 1;
 		if (haming[1] != control[1]) number += 2;
 		if (haming[2] != control[2]) number += 4;
 		if (haming[3] != control[3]) number += 8;
+
 		//if (number > 0) { number = (number % 8) + 1; if (mas[number - 1] == 0) mas[number - 1] = 1; else mas[number - 1] = 0; }
 
 		c = 0;
