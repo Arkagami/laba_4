@@ -99,7 +99,7 @@ void decode() {
 		if (haming[2] != control[2]) number += 4;
 		if (haming[3] != control[3]) number += 8;
 
-		//if (number > 0) { number = (number % 8) + 1; if (mas[number - 1] == 0) mas[number - 1] = 1; else mas[number - 1] = 0; }
+		if (number > 0) { number = (number % 8) + 1; if (mas[number - 1] == 0) mas[number - 1] = 1; else mas[number - 1] = 0; }
 
 		c = 0;
 		int step = 1;
